@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Registration extends Model
 {
-    protected $table = 'registrations'; // Ensure this matches your table name
-    protected $primaryKey = 'id'; // Ensure this is correct
-    public $timestamps = false; // Set to true if you use timestamps
+    protected $table = 'registrations';
+    protected $primaryKey = 'id'; 
+    public $timestamps = true; 
 
     protected $fillable = [
         'room_no', 'stay_from', 'seater', 'duration', 'food_status',
@@ -25,7 +25,6 @@ class Registration extends Model
         'posting_date' => 'datetime',
     ];
 
-    // Define any relationships, if applicable
     public function course()
     {
         return $this->belongsTo(Course::class, 'course_id');

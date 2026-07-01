@@ -44,7 +44,7 @@
                         </div>
                         <h2 class="mt-3 text-center">Admin Login</h2>
                         
-                        <form class="mt-4" method="POST" action="{{ route('login') }}">
+                        <form class="mt-4" method="POST" action="{{ route('admin.login') }}">
                             @csrf
                             @if ($errors->any())
                                 <div class="alert alert-danger">
@@ -71,9 +71,13 @@
                                 </div>
                                 <div class="col-lg-12 text-center">
                                     <button type="submit" class="btn btn-block btn-danger">LOGIN</button>
+                                    
                                 </div>
                                 <div class="col-lg-12 text-center mt-5">
-                                    <a href="{{ url('index.php') }}" class="text-danger">Go Back</a>
+                                     <p class="text-muted small">
+                                      Demo Email: admin@gmail.com / pwd: secret
+                                    </p>
+                                    <a href="{{ route('student.login') }}" class="text-danger">Go Back</a>
                                 </div>
                             </div>
                         </form>

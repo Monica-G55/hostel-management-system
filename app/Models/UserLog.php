@@ -11,7 +11,7 @@ class UserLog extends Model
    
 
     protected $fillable = [
-        'userId', 'userEmail', 'userIp', 'city', 'country', 'loginTime',
+        'userId', 'userEmail','loginTime',
     ];
 
     protected $dates = [

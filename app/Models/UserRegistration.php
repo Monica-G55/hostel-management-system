@@ -2,13 +2,34 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class UserRegistration extends Model
+class UserRegistration extends Authenticatable
 {
-    protected $table = 'userregistrations';
-    // Table name
-    public $timestamps = true; // Enable default timestamps (created_at and updated_at)
+    use Notifiable;
 
-    protected $fillable = ['regNo', 'firstName', 'middleName', 'lastName', 'gender', 'contactNo', 'email', 'password', 'regDate', 'updationDate', 'passUdateDate'];
+    protected $table = 'userregistrations';
+
+    public $timestamps = true;
+
+    protected $guarded = [];
+
+    protected $fillable = [
+        'regNo',
+        'firstName',
+        'middleName',
+        'lastName',
+        'gender',
+        'contactNo',
+        'email',
+        'password',
+        'regDate',
+        'updationDate',
+        'passUdateDate'
+    ];
+
+    protected $hidden = [
+        'password',
+    ];
 }

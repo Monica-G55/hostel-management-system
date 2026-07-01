@@ -10,48 +10,42 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\CourseController;
 
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect()->route('student.login');
 });
 
 // Authentication routes
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('admin/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Admin dashboard route
-
 
 
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
+// Student route
+Route::get('/student/login', [AuthController::class, 'showStudentLoginForm'])->name('student.login');
+Route::post('student/login', [AuthController::class, 'studentlogin'])->name('studentpost.login');
+
+Route::get('/student/dashboard', [DashboardController::class, 'studentIndex'])
+    ->name('student.dashboard')
+    ->middleware('auth:student');
 
 // Profile routes
-
-
-
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/admin/profile', [AdminController::class, 'showProfile'])->name('profile');
-    Route::post('/admin/profile/update', [AdminController::class, 'updateProfile'])->name('profile.update');
-    
+    Route::post('/admin/profile/update', [AdminController::class, 'updateProfile'])->name('profile.update');  
     Route::get('/admin/settings', [AdminController::class, 'showSettings'])->name('settings');
-    
-   
     Route::post('/admin/settings', [AdminController::class, 'changePassword'])->name('change-password');
 });
 
 
 // Home route
-
-
 Route::get('/home', [HomeController::class, 'index'])->middleware('auth'); // Ensure authentication middleware if required
-
-
-
 
 // Register student routes
 Route::get('/register-student', [UserRegistrationController::class, 'showForm'])->name('register-student');
@@ -60,22 +54,15 @@ Route::post('/register-student', [UserRegistrationController::class, 'register']
 
 // Route to view all students
 Route::get('/view-students', [UserRegistrationController::class, 'viewAllStudents'])->name('view-students');
-
-// Route to view a single student's details
 Route::get('/view-student/{id}', [UserRegistrationController::class, 'viewStudent'])->name('view-student');
-// In routes/web.php or routes/api.php
 Route::delete('/student/accounts/{id}/delete', [UserRegistrationController::class, 'destroy'])->name('student.accounts.delete');
 
-
-
-
-
-
 // booking hostel
-Route::get('/book-hostel', [RegistrationController::class, 'create'])->name('registration.create');
-Route::post('/book-hostel', [RegistrationController::class, 'store'])->name('registrations.store');
-
-
+    Route::get('/book-hostel', [RegistrationController::class, 'create'])->name('registration.create');
+    Route::post('/book-hostel', [RegistrationController::class, 'store'])->name('registrations.store');
+    Route::get('students/book-hostel', [RegistrationController::class, 'createstudentregister'])->name('book-hostel');
+    Route::get('students/log-activity', [RegistrationController::class, 'logActivity'])->name('log-activity');
+    Route::get('students/my-room-details', [RegistrationController::class, 'studentDetails'])->name('room-details');
 
 
 // Define route for getting seater information
@@ -90,8 +77,6 @@ Route::post('/ajax/check-availability', [RegistrationController::class, 'checkAv
 // Define route for calculating amount
 Route::post('/ajax/get-amount', [RegistrationController::class, 'getAmount'])->name('ajax.getAmount');
 
-
-
 // Route to view all registrations
 Route::get('manage-students', [RegistrationController::class, 'index'])->name('manage-students');
 
@@ -101,10 +86,7 @@ Route::get('manage-students/delete/{id}', [RegistrationController::class, 'destr
 // Route to view a single student's profile
 Route::get('students-profile/{id}', [RegistrationController::class, 'show'])->name('students-profile');
 
-
-
-
-// Define the route for managing rooms
+// Managing rooms
 Route::get('/manage-rooms', [RoomController::class, 'index'])->name('manage-rooms');
 Route::get('/rooms/create', [RoomController::class, 'create'])->name('create-room');
 Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
@@ -113,8 +95,7 @@ Route::put('/rooms/{room}', [RoomController::class, 'update'])->name('rooms.upda
 Route::delete('/rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
 
 
-use App\Http\Controllers\CourseController;
-
+// Managing course
 Route::get('manage-courses', [CourseController::class, 'index'])->name('manage-courses');
 Route::get('courses/create', [CourseController::class, 'create']);
 Route::post('courses', [CourseController::class, 'store'])->name('courses.store');

@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\Room;
 use App\Models\Registration;
-
-
+use Illuminate\Support\Facades\Session;
 class RegistrationController extends Controller
 {
     public function create()
@@ -19,6 +19,22 @@ class RegistrationController extends Controller
         return view('book-hostel', compact('rooms', 'courses'));
     }
 
+    public function createstudentregister()
+    {
+        // Fetch rooms and courses from the database to populate the form
+        $rooms = DB::table('rooms')->get();
+        $courses = DB::table('courses')->get();
+        return view('students.book-hostel', compact('rooms', 'courses'));
+    }
+
+    public function logActivity()
+{
+    $logs = DB::table('userlogs')
+                ->where('userId', Auth::guard('student')->id())
+                ->get();
+
+    return view('students.log-activity', compact('logs'));
+}
     public function store(Request $request)
     {
         $input = $request->all();
@@ -96,6 +112,21 @@ class RegistrationController extends Controller
             return abort(404, 'Record not found');
         }
     }
+
+     public function studentDetails()
+{
+    $student = Auth::guard('student')->user();
+
+    $registration = DB::table('registrations')
+        ->where('email_id', $student->email)
+        ->first();
+
+    if (!$registration) {
+        abort(404, 'Record not found');
+    }
+
+    return view('students.my-room-details', compact('registration'));
+}
 
     public function destroy($id)
     {
